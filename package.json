@@ -1,0 +1,17 @@
+{
+  "name": "jit-parser",
+  "version": "1.0.0",
+  "description": "Parse json data",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "parse-json"
+  ],
+  "author": "Dhanish Kumar S",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.5.4"
+  }
+}

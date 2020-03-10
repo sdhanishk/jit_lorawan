@@ -64,10 +64,14 @@ function getTimeFromDateString(dateTimeString) {
 
 for (let feed of feeds) {
 
-    refactoredData[data.channel.id][getDateFromDateString(feed.created_at)] = {
+    if(typeof refactoredData[data.channel.id][getDateFromDateString(feed.created_at)] === 'undefined') {
+        refactoredData[data.channel.id][getDateFromDateString(feed.created_at)] = [];
+    }
+
+    refactoredData[data.channel.id][getDateFromDateString(feed.created_at)].push({
         ...feed,
         time: getTimeFromDateString(feed.created_at)
-    };
+    });
 
 }
 

@@ -1,4 +1,7 @@
 const fs = require('fs');
+const MongoClient = require('mongodb').MongoClient;
+
+const URL = "mongodb://localhost:27017/lorawan_data";
 
 const data = require('./feed.json');
 
@@ -64,13 +67,31 @@ function getTimeFromDateString(dateTimeString) {
 
 for (let feed of feeds) {
 
-    if(typeof refactoredData[data.channel.id][getDateFromDateString(feed.created_at)] === 'undefined') {
+    if (typeof refactoredData[data.channel.id][getDateFromDateString(feed.created_at)] === 'undefined') {
         refactoredData[data.channel.id][getDateFromDateString(feed.created_at)] = [];
     }
 
     refactoredData[data.channel.id][getDateFromDateString(feed.created_at)].push({
         ...feed,
         time: getTimeFromDateString(feed.created_at)
+    });
+
+}
+
+function findAndUpdateDataInDatabase() {
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("lorawan_data");
+        dbo.createCollection("lora", function (err, res) {
+            if (err) throw err;
+            console.log("Collection created!");
+        });
+        dbo.collection("lora").insertOne(data, function (err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+        });
+        db.close();
     });
 
 }

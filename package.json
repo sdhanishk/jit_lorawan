@@ -12,6 +12,7 @@
   "author": "Dhanish Kumar S",
   "license": "ISC",
   "dependencies": {
+    "moment": "^2.24.0",
     "mongodb": "^3.5.4"
   }
 }

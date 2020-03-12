@@ -1,6 +1,7 @@
 const fs = require('fs');
 const MongoClient = require('mongodb').MongoClient;
 const mongodb = require('mongodb');
+const moment = require('moment');
 
 const URL = "mongodb://localhost:27017/lorawan_data";
 
@@ -60,9 +61,17 @@ function getDateFromDateString(dateTimeString) {
 
 function getTimeFromDateString(dateTimeString) {
 
-  const time = dateTimeString.split(' ')[1];
+  let time = dateTimeString.split(' ')[1];
+
+  time = time.replace(':', '-');
 
   return time;
+
+}
+
+function getTimeStampFromDateTimeString(dateTimeString, format) {
+
+  return moment(dateTimeString, format).toDate().getTime();
 
 }
 
@@ -74,7 +83,8 @@ for (let feed of feeds) {
 
   refactoredData[data.channel.id][getDateFromDateString(feed.created_at)].push({
     ...feed,
-    time: getTimeFromDateString(feed.created_at)
+    time: getTimeFromDateString(feed.created_at),
+    createdAt: getTimeStampFromDateTimeString(`${getDateFromDateString(feed.created_at)}-${getTimeFromDateString(feed.created_at)}`, 'YYYY-MM-DD-hh-mm-ss')
   });
 
 }

@@ -79,7 +79,7 @@ for (let feed of feeds) {
 
 }
 
-async function tryCreateCollection() {
+async function tryCreateCollection(collectionName) {
 
   MongoClient.connect(URL, function (err, db) {
     if (err) throw err;
@@ -143,7 +143,7 @@ function updateDocumentInCollection(collectionName, documentId) {
     if (err) throw err;
     var dbo = db.db("lorawan_data");
     var query = { _id: mongodb.ObjectID(documentId) };
-    dbo.collection(collectionName).deleteOne(query, function(err, obj) {
+    dbo.collection(collectionName).deleteOne(query, function (err, obj) {
       if (err) throw err;
       console.log("1 document deleted");
     });
@@ -157,6 +157,8 @@ function updateDocumentInCollection(collectionName, documentId) {
 async function findAndUpdateDataInDatabase() {
 
   const collectionName = '' + data.channel.id;
+
+  tryCreateCollection(collectionName);
 
   const documents = await getAllDocumentsFromCollection(collectionName);
 

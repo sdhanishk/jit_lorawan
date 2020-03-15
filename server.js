@@ -1,15 +1,9 @@
 const moment = require('moment');
 
+var express = require('express')
+var app = express()
+
 const databaseMethods = require('./db-helper');
-
-const results = databaseMethods.getAllDocumentsFromCollection();
-
-results.then((results) => {
-    console.log(getFeedsByDate('1008416', results[0], '2020-03-08'));
-    console.log(getFeedsBetweenTwoDates('1008416', results[0], '2020-03-06', '2020-03-08'));
-    console.log(getFeedsByMonth('1008416', results[0], '2020-03'));
-    console.log(getFeedsBetweenHours('1008416', results[0], '2020-03-04-11', '2020-03-04-11'));
-});
 
 function getFeedsByDate(channelId, data, date) {
 
@@ -95,3 +89,45 @@ function getFeedsBetweenHours(channelId, data, timeString1, timeString2) {
     return returnableFeeds;
 
 }
+
+app.get('/get-feeds-between-dates/:channelId/:fromDate/:toDate', (req, res) => {
+
+    const results = databaseMethods.getAllDocumentsFromCollection();
+
+    results.then((results) => {
+        res.send(getFeedsBetweenTwoDates(req.params.channelId, results[0], req.params.fromDate, req.params.toDate));
+    });
+
+})
+
+app.get('/get-feeds-by-date/:channelId/:date', (req, res) => {
+
+    const results = databaseMethods.getAllDocumentsFromCollection();
+
+    results.then((results) => {
+        res.send(getFeedsByDate(req.params.channelId, results[0], req.params.date));
+    });
+
+})
+
+app.get('/get-feeds-by-month/:channelId/:month', (req, res) => {
+
+    const results = databaseMethods.getAllDocumentsFromCollection();
+
+    results.then((results) => {
+        res.send(getFeedsByMonth(req.params.channelId, results[0], req.params.month));
+    });
+
+})
+
+app.get('/get-feeds-between-hours/:channelId/:fromDateHour/:toDateHour', (req, res) => {
+
+    const results = databaseMethods.getAllDocumentsFromCollection();
+
+    results.then((results) => {
+        res.send(getFeedsBetweenHours(req.params.channelId, results[0], req.params.fromDateHour, req.params.toDateHour));
+    });
+
+})
+
+app.listen(3000)
